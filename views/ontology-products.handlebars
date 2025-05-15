@@ -1,0 +1,66 @@
+<!-- views/ontology-products.handlebars -->
+<ul class="breadcrumbs">
+  <li><a href="/?showLabels={{showLabels}}">Hem</a></li>
+  <li><a href="/ontology/detail?uri={{encodeURIComponent ontology.uri}}&showLabels={{showLabels}}">{{ontology.title}}</a></li>
+  <li>Produkter</li>
+</ul>
+
+<h1>Produkter för {{ontology.title}}</h1>
+
+
+<div class="info-box">
+  <p>Visar produkter som är relaterade till ontologin <strong>{{ontology.title}}</strong>.</p>
+  <p><small>URI: <code>{{ontology.uri}}</code></small></p>
+</div>
+
+{{#if products.length}}
+  <div class="product-grid">
+    {{#each products}}
+      <div class="product-card">
+        <div class="product-card-header">
+          <h3>
+            <a href="/product/detail?uri={{encodeURIComponent this.uri}}&showLabels={{../showLabels}}">
+              {{this.name}}
+            </a>
+          </h3>
+        </div>
+        <div class="product-card-body">
+          {{#if this.description}}
+            <p class="description">{{this.description}}</p>
+          {{else}}
+            <p class="description"><em>Ingen beskrivning tillgänglig</em></p>
+          {{/if}}
+          
+          {{#if this.isNotor}}
+            <div class="product-meta">
+              <span class="product-tag notor-tag">Notor65</span>
+              {{#if this.articleNumber}}
+                <span class="product-info">Art.nr: {{this.articleNumber}}</span>
+              {{/if}}
+            </div>
+          {{/if}}
+        </div>
+        <div class="product-card-footer">
+          <a href="/product/detail?uri={{encodeURIComponent this.uri}}&showLabels={{../showLabels}}" class="btn">Visa detaljer</a>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{else}}
+  <div class="no-data-message">
+    <p>No products found for this ontology</p>
+    <p>Detta kan bero på att:</p>
+    <ul>
+      <li>The ontology has no related products</li>
+      <li>The products are not correctly linked to the ontology</li>
+      <li>The products use a different terminology than expected</li>
+    </ul>
+    
+    <a href="/ontology/debug-products?showLabels={{showLabels}}" class="btn">Show all products in the system</a>
+  </div>
+{{/if}}
+
+<div class="action-links">
+  <a href="/ontology/detail?uri={{encodeURIComponent ontology.uri}}&showLabels={{showLabels}}" class="btn">Back to ontology details</a>
+  <a href="/query?query={{encodeURIComponent (concat 'SELECT ?product ?name ?description WHERE { ?product a ?type . OPTIONAL { ?product <http://schema.org/name> ?name } OPTIONAL { ?product <http://schema.org/description> ?description } FILTER(CONTAINS(STR(?product), "' (ontology.uri | split:"/")[2] '")) } LIMIT 100')}}&showLabels={{showLabels}}" class="btn">Sök produkter med SPARQL</a>
+</div>

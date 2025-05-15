@@ -1,0 +1,164 @@
+<!-- views/graphdb.handlebars -->
+
+<ul class="breadcrumbs">
+  <li><a href="/?showLabels={{showLabels}}">Home</a></li>
+  <li>GraphDB Diagnostic Data</li>
+</ul>
+<h1>{{title}}</h1>
+<p>{{message}}</p>
+
+
+<!-- Debug panel -->
+<div class="debug-panel">
+  <h3>Debug Information <button onclick="toggleDebug()">Toggle Details</button></h3>
+  <div class="debug-summary">
+    <p><strong>Timestamp:</strong> {{debug.timestamp}}</p>
+    <p><strong>GraphDB Endpoint:</strong> {{debug.endpoint}}</p>
+    <p><strong>Repository:</strong> {{debug.repository}}</p>
+    <p><strong>Query Executed:</strong> {{debug.queryExecuted}}</p>
+    <p><strong>Result Count:</strong> {{debug.resultCount}}</p>
+    {{#if debug.error}}
+    <p><strong>Error:</strong> {{debug.error}}</p>
+    {{/if}}
+  </div>
+  
+  <div id="debugInfo" style="display: none;">
+    <h4>Query</h4>
+    <pre>{{debug.query}}</pre>
+    
+    {{#if debug.resultCount}}
+      <h4>Data Structure</h4>
+      <p>First row keys: {{debug.firstRowKeys}}</p>
+      {{#if debug.firstRowStructure}}
+        <table class="debug-table">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Type</th>
+              <th>Has Value</th>
+              <th>Sample Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each debug.firstRowStructure}}
+              <tr>
+                <td>{{@key}}</td>
+                <td>{{this.type}}</td>
+                <td>{{this.hasValue}}</td>
+                <td>{{this.value}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{/if}}
+    {{/if}}
+    
+    {{#if debug.unexpectedResponseStructure}}
+      <h4>Unexpected Response Structure</h4>
+      <pre>{{debug.responsePreview}}</pre>
+    {{/if}}
+    
+    {{#if debug.errorStack}}
+      <h4>Error Stack</h4>
+      <pre>{{debug.errorStack}}</pre>
+    {{/if}}
+  </div>
+</div>
+
+<div class="data-container">
+  {{#if rows.length}}
+    <p class="result-count">Showing {{rows.length}} results.</p>
+    
+    <!-- Display data in standard format -->
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Predicate</th>
+          <th>Object</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each rows}}
+          <tr>
+            <td class="subject-cell">
+              {{#if this.s}}
+                {{#if (eq this.s.type "uri")}}
+                  <a href="/resource?uri={{encodeURIComponent this.s.value}}&showLabels={{../showLabels}}" class="uri-value">
+                    {{#if ../showLabels}}
+                      {{getDisplayValue this.s ../showLabels ../labelMap}}
+                    {{else}}
+                      {{this.s.value}}
+                    {{/if}}
+                  </a>
+                {{else}}
+                  <span class="literal-value">{{this.s.value}}</span>
+                {{/if}}
+              {{else}}
+                <em>No subject</em>
+              {{/if}}
+            </td>
+            <td class="predicate-cell">
+              {{#if this.p}}
+                {{#if (eq this.p.type "uri")}}
+                  <a href="/resource?uri={{encodeURIComponent this.p.value}}&showLabels={{../showLabels}}" class="uri-value">
+                    {{#if ../showLabels}}
+                      {{getDisplayValue this.p ../showLabels ../labelMap}}
+                    {{else}}
+                      {{this.p.value}}
+                    {{/if}}
+                  </a>
+                {{else}}
+                  <span class="literal-value">{{this.p.value}}</span>
+                {{/if}}
+              {{else}}
+                <em>No predicate</em>
+              {{/if}}
+            </td>
+            <td class="object-cell">
+              {{#if this.o}} 
+                {{#if (eq this.o.type "uri")}}
+                  <a href="/resource?uri={{encodeURIComponent this.o.value}}&showLabels={{../showLabels}}" class="uri-value">
+                    {{#if ../showLabels}}
+                      {{getDisplayValue this.o ../showLabels ../labelMap}}
+                    {{else}}
+                      {{this.o.value}}
+                    {{/if}}
+                  </a>
+                {{else}}
+                  <span class="literal-value">{{this.o.value}}</span>
+                {{/if}}
+              {{else}}
+                <em>No object</em>
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <div class="no-data-message">
+      <p>No results found for this query</p>
+      
+      <div class="debug-hint">
+        <p>Möjliga orsaker:</p>
+        <ul>
+          <li>Databasen är tom</li>
+          <li>Alla resurser filtrerades bort som systemresurser</li>
+          <li>Det finns ett problem med anslutningen till GraphDB</li>
+          <li>SPARQL-frågan returnerade inga resultat</li>
+        </ul>
+        <p>Kolla utvecklarkonsolen för mer information.</p>
+      </div>
+    </div>
+  {{/if}}
+</div>
+<!-- Always show the labels toggle button -->
+<div class="display-mode">
+  <label for="displayToggle">Visa mänskligt läsbara etiketter:</label>
+  <label class="switch">
+    <input type="checkbox" id="displayToggle" {{#if showLabels}}checked{{/if}}>
+    <span class="slider"></span>
+  </label>
+  <span class="display-mode-text">{{#if showLabels}}På{{else}}Av{{/if}}</span>
+</div>

@@ -1,0 +1,417 @@
+
+  <div class="page-container">
+    <!-- Table of Contents Sidebar -->
+    <div class="toc-sidebar">
+      <div class="toc-content">
+        <h3>Table of Contents</h3>
+        <ul class="toc-list">
+          <li><a href="#metadata" class="toc-active">Metadata</a></li>
+          <li><a href="#types">Types</a></li>
+          {{#if superClasses}}
+          <li><a href="#superclasses">Super Classes</a></li>
+          {{/if}}
+          {{#if subClasses}}
+          <li><a href="#subclasses">Sub Classes</a></li>
+          {{/if}}
+          {{#if inDomainOf}}
+          <li><a href="#in-domain-of">In Domain Of</a></li>
+          {{/if}}
+          {{#if inRangeOf}}
+          <li><a href="#in-range-of">In Range Of</a></li>
+          {{/if}}
+          <li><a href="#properties">Properties</a></li>
+          {{#if related}}
+          <li><a href="#related">Related Resources</a></li>
+          {{/if}}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ontology-container">
+      <h1>{{resourceLabel}}</h1>
+
+      <h2 id="metadata">Metadata</h2>
+      <div class="metadata-section">
+        <p><strong>IRI</strong><br>
+        <code>{{uri}}</code></p>
+
+        {{#if description}}
+        <p><strong>Description</strong><br>
+        {{description}}</p>
+        {{/if}}
+      </div>
+
+      <h2 id="types">Types</h2>
+      <div class="types-section">
+        <div class="type-list">
+          {{#each types}}
+          <a href="/resource?uri={{this.uri}}" class="type-badge">{{this.label}}</a>
+          {{/each}}
+        </div>
+      </div>
+
+      {{#if superClasses}}
+      <h2 id="superclasses">Super Classes</h2>
+      <div class="relations-section">
+        <ul class="relation-list">
+          {{#each superClasses}}
+          <li><a href="/resource?uri={{this.uri}}">{{this.label}}</a></li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/if}}
+
+      {{#if subClasses}}
+      <h2 id="subclasses">Sub Classes</h2>
+      <div class="relations-section">
+        <ul class="relation-list">
+          {{#each subClasses}}
+          <li><a href="/resource?uri={{this.uri}}">{{this.label}}</a></li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/if}}
+
+      {{#if inDomainOf}}
+      <h2 id="in-domain-of">In Domain Of</h2>
+      <div class="relations-section">
+        <p>Properties that have this resource as their domain:</p>
+        <ul class="relation-list">
+          {{#each inDomainOf}}
+          <li><a href="/resource?uri={{this.uri}}">{{this.label}}</a></li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/if}}
+
+      {{#if inRangeOf}}
+      <h2 id="in-range-of">In Range Of</h2>
+      <div class="relations-section">
+        <p>Properties that have this resource as their range:</p>
+        <ul class="relation-list">
+          {{#each inRangeOf}}
+          <li><a href="/resource?uri={{this.uri}}">{{this.label}}</a></li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/if}}
+
+      <h2 id="properties">Properties</h2>
+      
+      {{#if propertyGroups.basic.length}}
+      <div class="properties-section">
+        <h3>Basic Properties</h3>
+        <table class="properties-table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each propertyGroups.basic}}
+            <tr>
+              <td>
+                <a href="/resource?uri={{this.predicate.value}}">
+                  {{#if ../showLabels}}
+                    {{#lookup ../labelMap this.predicate.value}}{{else}}{{this.predicate.value}}{{/lookup}}
+                  {{else}}
+                    {{this.predicate.value}}
+                  {{/if}}
+                </a>
+              </td>
+              <td>
+                {{#if (eq this.object.type "uri")}}
+                  <a href="/resource?uri={{this.object.value}}">
+                    {{#if ../showLabels}}
+                      {{#lookup ../labelMap this.object.value}}{{else}}{{this.object.value}}{{/lookup}}
+                    {{else}}
+                      {{this.object.value}}
+                    {{/if}}
+                  </a>
+                {{else}}
+                  {{this.object.value}}
+                {{/if}}
+              </td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      {{/if}}
+
+      {{#if propertyGroups.relationships.length}}
+      <div class="properties-section">
+        <h3>Relationship Properties</h3>
+        <table class="properties-table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each propertyGroups.relationships}}
+            <tr>
+              <td>
+                <a href="/resource?uri={{this.predicate.value}}">
+                  {{#if ../showLabels}}
+                    {{#lookup ../labelMap this.predicate.value}}{{else}}{{this.predicate.value}}{{/lookup}}
+                  {{else}}
+                    {{this.predicate.value}}
+                  {{/if}}
+                </a>
+              </td>
+              <td>
+                {{#if (eq this.object.type "uri")}}
+                  <a href="/resource?uri={{this.object.value}}">
+                    {{#if ../showLabels}}
+                      {{#lookup ../labelMap this.object.value}}{{else}}{{this.object.value}}{{/lookup}}
+                    {{else}}
+                      {{this.object.value}}
+                    {{/if}}
+                  </a>
+                {{else}}
+                  {{this.object.value}}
+                {{/if}}
+              </td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      {{/if}}
+
+      {{#if propertyGroups.other.length}}
+      <div class="properties-section">
+        <h3>Other Properties</h3>
+        <table class="properties-table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each propertyGroups.other}}
+            <tr>
+              <td>
+                <a href="/resource?uri={{this.predicate.value}}">
+                  {{#if ../showLabels}}
+                    {{#lookup ../labelMap this.predicate.value}}{{else}}{{this.predicate.value}}{{/lookup}}
+                  {{else}}
+                    {{this.predicate.value}}
+                  {{/if}}
+                </a>
+              </td>
+              <td>
+                {{#if (eq this.object.type "uri")}}
+                  <a href="/resource?uri={{this.object.value}}">
+                    {{#if ../showLabels}}
+                      {{#lookup ../labelMap this.object.value}}{{else}}{{this.object.value}}{{/lookup}}
+                    {{else}}
+                      {{this.object.value}}
+                    {{/if}}
+                  </a>
+                {{else}}
+                  {{this.object.value}}
+                {{/if}}
+              </td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+      {{/if}}
+
+      {{#if related}}
+      <h2 id="related">Related Resources</h2>
+      <div class="related-section">
+        <ul class="relation-list">
+          {{#each related}}
+          <li><a href="/resource?uri={{this.uri}}">{{this.label}}</a></li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/if}}
+
+      <h2 id="namespaces">Namespaces</h2>
+      <div class="namespaces-section">
+        <table class="namespaces-table">
+          {{#if commonNamespaces}}
+            {{#each commonNamespaces}}
+            <tr>
+              <td><strong>{{this.prefix}}</strong></td>
+              <td><code>{{this.uri}}</code></td>
+            </tr>
+            {{/each}}
+          {{else}}
+            <tr>
+              <td><strong>rdf</strong></td>
+              <td><code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code></td>
+            </tr>
+            <tr>
+              <td><strong>rdfs</strong></td>
+              <td><code>http://www.w3.org/2000/01/rdf-schema#</code></td>
+            </tr>
+            <tr>
+              <td><strong>owl</strong></td>
+              <td><code>http://www.w3.org/2002/07/owl#</code></td>
+            </tr>
+            <tr>
+              <td><strong>xsd</strong></td>
+              <td><code>http://www.w3.org/2001/XMLSchema#</code></td>
+            </tr>
+          {{/if}}
+        </table>
+      </div>
+
+      <div class="display-control">
+        <label for="displayToggle">Show human-readable labels:</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="displayToggle" {{#if showLabels}}checked{{/if}}>
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label">{{#if showLabels}}On{{else}}Off{{/if}}</span>
+      </div>
+    
+      <div class="navigation-links">
+        <a href="/" class="nav-link">Back to Home</a>
+        <a href="/search" class="nav-link">Search</a>
+        <a href="/graphdb?uri={{encodeURIComponent uri}}" class="nav-link">View Raw Triples</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Update display toggle
+      const displayToggle = document.getElementById('displayToggle');
+      const toggleLabel = document.querySelector('.toggle-label');
+      
+      if (displayToggle && toggleLabel) {
+        displayToggle.addEventListener('change', function() {
+          // Update the label text
+          toggleLabel.textContent = this.checked ? 'On' : 'Off';
+          
+          // Create URL with updated showLabels parameter
+          const url = new URL(window.location.href);
+          url.searchParams.set('showLabels', this.checked ? 'true' : 'false');
+          
+          // Redirect to the new URL
+          window.location.href = url.toString();
+        });
+      }
+      
+      // Initialize TOC highlight on scroll
+      initTOCHighlight();
+      
+      // Make the TOC stay in view when scrolling
+      window.addEventListener('scroll', function() {
+        const toc = document.querySelector('.toc-sidebar');
+        if (toc) {
+          if (window.innerWidth > 992) { // Only apply this on larger screens
+            const scrollPosition = window.scrollY;
+            toc.style.top = (scrollPosition > 0) ? '0' : '';
+          }
+        }
+      });
+      
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('.toc-list a, .toc-sublist a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          const targetId = this.getAttribute('href').substring(1);
+          const targetElement = document.getElementById(targetId);
+          
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 20,
+              behavior: 'smooth'
+            });
+            
+            // Update URL without reload
+            history.pushState(null, null, `#${targetId}`);
+            
+            // Highlight the clicked TOC item
+            highlightTOCItem(this);
+          }
+        });
+      });
+      
+      // Check for hash in URL on page load to scroll to section
+      if (window.location.hash) {
+        const targetId = window.location.hash.substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+          setTimeout(() => {
+            window.scrollTo({
+              top: targetElement.offsetTop - 20,
+              behavior: 'auto'
+            });
+            
+            // Find and highlight the corresponding TOC item
+            const tocItem = document.querySelector(`.toc-list a[href="#${targetId}"], .toc-sublist a[href="#${targetId}"]`);
+            if (tocItem) {
+              highlightTOCItem(tocItem);
+            }
+          }, 100);
+        }
+      }
+    });
+    
+    // Function to highlight active TOC item
+    function highlightTOCItem(item) {
+      // Remove active class from all TOC items
+      document.querySelectorAll('.toc-list a, .toc-sublist a').forEach(link => {
+        link.classList.remove('toc-active');
+      });
+      
+      // Add active class to the clicked item
+      item.classList.add('toc-active');
+    }
+    
+    // Function to highlight TOC items based on scroll position
+    function initTOCHighlight() {
+      // Get all section elements
+      const sections = document.querySelectorAll('h2[id], .entity-item[id]');
+      
+      // Observe sections visibility
+      window.addEventListener('scroll', function() {
+        let currentSection = '';
+        const scrollPosition = window.scrollY;
+        
+        // Find the current section
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop - 100;
+          const sectionHeight = section.offsetHeight;
+          
+          if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+            currentSection = section.getAttribute('id');
+          }
+        });
+        
+        // Highlight the corresponding TOC item
+        if (currentSection) {
+          const tocItem = document.querySelector(`.toc-list a[href="#${currentSection}"], .toc-sublist a[href="#${currentSection}"]`);
+          
+          if (tocItem) {
+            document.querySelectorAll('.toc-list a, .toc-sublist a').forEach(link => {
+              link.classList.remove('toc-active');
+            });
+            
+            tocItem.classList.add('toc-active');
+            
+            // If it's a subitem, also highlight its parent
+            const parent = tocItem.closest('.toc-sublist');
+            if (parent && parent.previousElementSibling) {
+              parent.previousElementSibling.classList.add('toc-active');
+            }
+          }
+        }
+      });
+    }
+  </script>

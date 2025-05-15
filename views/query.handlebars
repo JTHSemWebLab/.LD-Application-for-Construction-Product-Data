@@ -1,0 +1,34 @@
+<ul class="breadcrumbs">
+  <li><a href="/?showLabels={{showLabels}}">Home</a></li>
+  <li>SPARQL Query </li>
+</ul>
+
+
+<h1>{{title}}</h1>
+
+
+
+<p>Enter your SPARQL query below</p>
+
+<form action="/query" method="post" class="query-form">
+  <div class="form-group">
+    <textarea name="query" rows="10" class="form-control" placeholder="PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT * WHERE { 
+  ?s ?p ?o 
+} LIMIT 100">SELECT * WHERE { 
+  ?s ?p ?o 
+} LIMIT 100</textarea>
+  </div>
+  <input type="hidden" name="showLabels" id="showLabelsInput" value="{{showLabels}}">
+  <div class="form-group">
+    <button type="submit" class="btn">Run query</button>
+  </div>
+<div class="display-mode">
+  <label for="displayToggle">Visa mänskligt läsbara etiketter:</label>
+  <label class="switch">
+    <input type="checkbox" id="displayToggle" {{#if showLabels}}checked{{/if}}>
+    <span class="slider"></span>
+  </label>
+  <span class="display-mode-text">{{#if showLabels}}På{{else}}Av{{/if}}</span>
+</div>
+</form>

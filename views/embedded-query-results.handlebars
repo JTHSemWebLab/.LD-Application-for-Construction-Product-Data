@@ -1,0 +1,50 @@
+<!-- views/embedded-query-results.handlebars -->
+<div class="embedded-results">
+  {{#if rows.length}}
+    <p class="result-count">Visar {{rows.length}} resultat</p>
+    
+    <table class="data-table">
+      <thead>
+        <tr>
+          {{#each headers}}
+            <th>{{this}}</th>
+          {{/each}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each rows}}
+          <tr>
+            {{#each ../headers}}
+              <td>
+                {{#if (lookup ../this this)}}
+                  {{#if (eq (lookup (lookup ../this this) "type") "uri")}}
+                    <a href="/resource?uri={{encodeURIComponent (lookup (lookup ../this this) "value")}}&showLabels={{../../showLabels}}" class="uri-value" target="_parent">
+                      {{#if ../../showLabels}}
+                        {{#if (lookup ../../labelMap (lookup (lookup ../this this) "value"))}}
+                          {{lookup ../../labelMap (lookup (lookup ../this this) "value")}}
+                        {{else}}
+                          {{lookup (lookup ../this this) "value"}}
+                        {{/if}}
+                      {{else}}
+                        {{lookup (lookup ../this this) "value"}}
+                      {{/if}}
+                    </a>
+                  {{else}}
+                    <span class="literal-value">{{lookup (lookup ../this this) "value"}}</span>
+                  {{/if}}
+                {{else}}
+                  <em>-</em>
+                {{/if}}
+              </td>
+            {{/each}}
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <div class="no-data-message">
+      <p>No results found for this query</p>
+    </div>
+  {{/if}}
+</div>
+
